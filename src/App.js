@@ -1,23 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
+import useFetch from './utils/useFetch';
 
 function App() {
+  const { data: joke, loading: loadingJoke, error: errorJoke, refetch: refetchJoke } = useFetch('https://dog.ceo/api/breeds/image/random');
+  const { data: quote, loading: loadingQuote, error: errorQuote, refetch: refetchQuote } = useFetch('https://api.quotable.io/random');
+
+
+  if (loadingJoke) return <div>Loading...</div>;
+  if (loadingQuote) return ;
+
+  if (errorJoke) return console.log(errorJoke);
+  if (errorQuote) return console.log(errorQuote);
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <img src={joke?.message} alt="Random Dog" />
+      {/* {data ? <img src={joke.message}></img> : null} */}
+      <button onClick={refetchJoke}>Refetch joke</button>
+      {loadingQuote ? <div>Loading...</div> 
+      : 
+      <div>
+        <p>{quote?.content}</p>
+        <p>{quote?.author}</p>
+        <button onClick={refetchQuote}>Refetch Quote</button>
+      </div>
+      }
     </div>
   );
 }
